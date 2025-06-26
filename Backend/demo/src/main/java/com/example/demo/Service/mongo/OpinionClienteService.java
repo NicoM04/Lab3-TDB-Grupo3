@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.bson.Document;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class OpinionClienteService {
         return repository.findAll();
     }
 
-    public Optional<OpinionCliente> getById(String id) {
+    public Optional<OpinionCliente> getById(int id) {
         return repository.findById(id);
     }
 

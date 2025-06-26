@@ -35,6 +35,7 @@ public class HistorialRepartidorController {
         service.delete(id);
     }
 
+
     @GetMapping("/rutas-frecuentes")
     public List<Document> obtenerRutasFrecuentesUltimos7Dias() {
         return service.obtenerRutasFrecuentesUltimos7Dias();

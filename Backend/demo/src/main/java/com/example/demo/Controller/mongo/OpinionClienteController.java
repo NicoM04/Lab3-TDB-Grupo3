@@ -2,15 +2,15 @@ package com.example.demo.Controller.mongo;
 
 import com.example.demo.Entity.mongo.OpinionCliente;
 import com.example.demo.Service.mongo.OpinionClienteService;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/opiniones")
+@RequestMapping("/mongo/opiniones")
 @CrossOrigin(origins = "*")
 public class OpinionClienteController {
 
@@ -27,7 +27,7 @@ public class OpinionClienteController {
     }
 
     @GetMapping("/{id}")
-    public Optional<OpinionCliente> getById(@PathVariable String id) {
+    public Optional<OpinionCliente> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
@@ -43,12 +43,12 @@ public class OpinionClienteController {
 
 
     @GetMapping("/promedio-puntuacion")
-    public List<Document> getPromedioPorEmpresa() {
+    public List<org.bson.Document> getPromedioPorEmpresa() {
         return opinionClienteService.obtenerPromedioPuntuacionPorEmpresa();
     }
 
     @GetMapping("/buscar-claves")
-    public List<Document> getOpinionesConPalabrasClave() {
+    public List<org.bson.Document> getOpinionesConPalabrasClave() {
         return opinionClienteService.buscarOpinionesConPalabrasClave();
     }
 
