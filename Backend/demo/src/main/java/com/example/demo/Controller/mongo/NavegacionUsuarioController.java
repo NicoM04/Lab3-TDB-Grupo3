@@ -39,7 +39,9 @@ public class NavegacionUsuarioController {
         service.delete(id);
     }
 
+    //------------- CONSULTAS REQUERIDAS ------------
 
+    //5) Detectar clientes que realizaron búsquedas sin concretar pedidos (navegación sin compra).
     @GetMapping("/clientes-sin-compra")
     public List<Integer> detectarClientesSinCompra() {
         return service.detectarClientesSinCompraEnUltimos7Dias();

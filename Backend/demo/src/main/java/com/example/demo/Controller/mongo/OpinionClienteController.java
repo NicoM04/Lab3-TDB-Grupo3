@@ -41,17 +41,21 @@ public class OpinionClienteController {
         service.deleteById(id);
     }
 
+    //------------- CONSULTAS REQUERIDAS -------------
 
+    //1) Obtener el promedio de puntuación por empresa o farmacia.
     @GetMapping("/promedio-puntuacion")
     public List<org.bson.Document> getPromedioPorEmpresa() {
         return opinionClienteService.obtenerPromedioPuntuacionPorEmpresa();
     }
 
+    //2) Listar las opiniones que contengan palabras clave como 'demora' o 'error'.
     @GetMapping("/buscar-claves")
     public List<org.bson.Document> getOpinionesConPalabrasClave() {
         return opinionClienteService.buscarOpinionesConPalabrasClave();
     }
 
+    //6) Agrupar opiniones por hora del día para analizar patrones de satisfacción.
     @GetMapping("/agrupadas-por-hora")
     public List<Document> agruparPorHora() {
         return service.agruparOpinionesPorHora();
