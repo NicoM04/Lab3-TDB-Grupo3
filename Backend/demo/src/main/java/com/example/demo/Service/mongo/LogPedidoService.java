@@ -6,16 +6,14 @@ import com.example.demo.Repository.mongo.LogPedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.count;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 
 @Service
@@ -43,28 +41,32 @@ public class LogPedidoService {
         repository.deleteById(id);
     }
 
-
     public long contarPedidosConMasDe3CambiosEn10Min() {
-        Date diezMinutosAtras = new Date(System.currentTimeMillis() - 10 * 60 * 1000);
-
         Aggregation agg = newAggregation(
-                match(Criteria.where("timestamp").gte(diezMinutosAtras)),
-                group("idPedido").count().as("totalCambios"),
-                match(Criteria.where("totalCambios").gt(3)),
+                unwind("historial"),
+                group("idPedido")
+                        .count().as("totalCambios")
+                        .min("historial.timestamp").as("minTime")
+                        .max("historial.timestamp").as("maxTime"),
+                addFields()
+                        .addFieldWithValue("diffMillis",
+                                ArithmeticOperators.Subtract.valueOf("maxTime").subtract("minTime")
+                        ).build(),
+                match(Criteria.where("totalCambios").gt(3)
+                        .and("diffMillis").lte(10 * 60 * 1000)),
                 count().as("totalPedidos")
         );
 
-        AggregationResults<ContadorResultado> results = mongoTemplate.aggregate(agg, "logs_pedidos", ContadorResultado.class);
-        return results.getUniqueMappedResult() != null ? results.getUniqueMappedResult().getTotalPedidos() : 0;
+        AggregationResults<ContadorResultado> results =
+                mongoTemplate.aggregate(agg, "logs_pedidos", ContadorResultado.class);
+
+        ContadorResultado res = results.getUniqueMappedResult();
+        return res != null ? res.getTotalPedidos() : 0L;
     }
 
     static class ContadorResultado {
         private long totalPedidos;
-        public long getTotalPedidos() {
-            return totalPedidos;
-        }
-        public void setTotalPedidos(long totalPedidos) {
-            this.totalPedidos = totalPedidos;
-        }
+        public long getTotalPedidos() { return totalPedidos; }
+        public void setTotalPedidos(long totalPedidos) { this.totalPedidos = totalPedidos; }
     }
 }

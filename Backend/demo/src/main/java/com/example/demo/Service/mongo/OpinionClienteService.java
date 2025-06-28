@@ -42,18 +42,25 @@ public class OpinionClienteService {
 
     public List<Document> obtenerPromedioPuntuacionPorEmpresa() {
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.group("empresa_id")
+                Aggregation.group("$empresaId")   // o "$empresa_id" si así está en Mongo
                         .avg("puntuacion").as("promedioPuntuacion"),
-                Aggregation.project("promedioPuntuacion").and("empresa_id").previousOperation()
+                Aggregation.project("promedioPuntuacion")
+                        .and("_id").as("empresa_id")
+                        .andExclude("_id")
         );
+
 
         return mongoTemplate.aggregate(aggregation, "opiniones_clientes", Document.class).getMappedResults();
     }
 
+
     public List<Document> buscarOpinionesConPalabrasClave() {
         MatchOperation filtro = Aggregation.match(Criteria.where("comentario").regex("demora|error", "i"));
 
-        Aggregation aggregation = Aggregation.newAggregation(filtro);
+        ProjectionOperation proyectarCampos = Aggregation.project("comentario", "puntuacion", "fecha", "clienteId", "empresaId")
+                .andExclude("_id");  // opcional, si no quieres el _id
+
+        Aggregation aggregation = Aggregation.newAggregation(filtro, proyectarCampos);
 
         return mongoTemplate.aggregate(aggregation, "opiniones_clientes", Document.class).getMappedResults();
     }
