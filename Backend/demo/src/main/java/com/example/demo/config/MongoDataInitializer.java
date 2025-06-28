@@ -67,20 +67,41 @@ public class MongoDataInitializer implements CommandLineRunner {
         );
         logPedidoRepo.saveAll(logs);
 
-        // Inserta historial repartidor
         List<HistorialRepartidor> historial = List.of(
+                // Ruta frecuente A → B → C (repetida 3 veces)
                 new HistorialRepartidor(null, 1, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-28T09:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-28T09:15:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-28T09:25:00"))
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-22T09:00:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-22T09:15:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-22T09:25:00"))
                 )),
                 new HistorialRepartidor(null, 2, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6770, -33.5861, parseDateTime("2025-06-27T14:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6693, -33.4523, parseDateTime("2025-06-27T14:20:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6565, -33.4569, parseDateTime("2025-06-27T14:30:00"))
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-23T10:00:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-23T10:20:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-23T10:35:00"))
+                )),
+                new HistorialRepartidor(null, 3, List.of(
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-25T11:00:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-25T11:15:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-25T11:30:00"))
+                )),
+
+                // Ruta única distinta D → E → F (Repartidor 4)
+                new HistorialRepartidor(null, 4, List.of(
+                        new HistorialRepartidor.Ubicacion(-70.6100, -33.4700, parseDateTime("2025-06-26T08:00:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6200, -33.4800, parseDateTime("2025-06-26T08:15:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6300, -33.4900, parseDateTime("2025-06-26T08:30:00"))
+                )),
+
+                // Ruta única distinta G → H → I (Repartidor 5)
+                new HistorialRepartidor(null, 5, List.of(
+                        new HistorialRepartidor.Ubicacion(-70.7000, -33.5500, parseDateTime("2025-06-28T09:00:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7100, -33.5600, parseDateTime("2025-06-28T09:15:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7200, -33.5700, parseDateTime("2025-06-28T09:30:00"))
                 ))
         );
+
         historialRepartidorRepo.saveAll(historial);
+
 
         // Inserta eventos navegación usuarios
         List<NavegacionUsuario> eventos = List.of(

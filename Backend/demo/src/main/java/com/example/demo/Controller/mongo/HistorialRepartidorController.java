@@ -5,7 +5,7 @@ import com.example.demo.Service.mongo.HistorialRepartidorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.Document;
+import org.bson.Document;
 import java.util.List;
 
 @RestController

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.Document;
+import org.bson.Document;
 import java.util.Date;
 import java.util.List;
 
@@ -40,20 +40,39 @@ public class HistorialRepartidorService {
     public void delete(String id) {
         repository.deleteById(id);
     }
-
-
-
+    
     public List<Document> obtenerRutasFrecuentesUltimos7Dias() {
         Date fechaLimite = new Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
 
-        MatchOperation match = match(Criteria.where("timestamp").gte(fechaLimite));
-        GroupOperation group = group("idRepartidor", "latitud", "longitud").count().as("frecuencia");
-        SortOperation sort = sort(Sort.by(Sort.Direction.DESC, "frecuencia"));
-        LimitOperation limit = limit(10);
+        Aggregation agg = newAggregation(
+                // 1) Filtrar documentos que contengan alguna ubicación en últimos 7 días
+                match(Criteria.where("recorrido.timestamp").gte(fechaLimite)),
 
-        Aggregation agg = newAggregation(match, group, sort, limit);
+                // 2) Desplegar el arreglo de ubicaciones para poder proyectar solo lat/lng
+                unwind("recorrido"),
+
+                // 3) Proyectar solo lat y lng (ignorando timestamp)
+                project()
+                        .and("idRepartidor").as("idRepartidor")
+                        .and("recorrido.lat").as("lat")
+                        .and("recorrido.lng").as("lng"),
+
+                // 4) Reagrupar las ubicaciones por idRepartidor para reconstruir la ruta sin timestamp
+                group("idRepartidor")
+                        .push(new Document("lat", "$lat").append("lng", "$lng")).as("ruta"),
+
+                // 5) Agrupar por la ruta (arreglo de lat/lng) para contar frecuencia (rutas repetidas)
+                group("ruta")
+                        .count().as("frecuencia"),
+
+                // 6) Ordenar y limitar
+                sort(Sort.by(Sort.Direction.DESC, "frecuencia")),
+                limit(10)
+        );
 
         AggregationResults<Document> results = mongoTemplate.aggregate(agg, "historial_repartidores", Document.class);
         return results.getMappedResults();
     }
+
+
 }
