@@ -70,34 +70,81 @@ public class MongoDataInitializer implements CommandLineRunner {
         List<HistorialRepartidor> historial = List.of(
                 // Ruta frecuente A → B → C (repetida 3 veces)
                 new HistorialRepartidor(null, 1, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-22T09:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-22T09:15:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-22T09:25:00"))
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-29T08:00:00")),
+                        // 2) Punto intermedio 1 (20%)
+                        new HistorialRepartidor.Ubicacion(-70.6441, -33.4240, parseDateTime("2025-06-29T08:05:00")),
+                        // 3) Punto intermedio 2 (40%)
+                        new HistorialRepartidor.Ubicacion(-70.6462, -33.4274, parseDateTime("2025-06-29T08:10:00")),
+                        // 4) Punto intermedio 3 (60%)
+                        new HistorialRepartidor.Ubicacion(-70.6483, -33.4308, parseDateTime("2025-06-29T08:15:00")),
+                        // 5) Punto intermedio 4 (80%)
+                        new HistorialRepartidor.Ubicacion(-70.6494, -33.4340, parseDateTime("2025-06-29T08:20:00")),
+                        // 6) Punto intermedio 5 (90%)
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.4359, parseDateTime("2025-06-29T08:25:00")),
+                        // 7) Destino
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-29T08:30:00"))
                 )),
                 new HistorialRepartidor(null, 2, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-23T10:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-23T10:20:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-23T10:35:00"))
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-29T08:00:00")),
+                        // 2) Punto intermedio 1 (20%)
+                        new HistorialRepartidor.Ubicacion(-70.6441, -33.4240, parseDateTime("2025-06-29T08:05:00")),
+                        // 3) Punto intermedio 2 (40%)
+                        new HistorialRepartidor.Ubicacion(-70.6462, -33.4274, parseDateTime("2025-06-29T08:10:00")),
+                        // 4) Punto intermedio 3 (60%)
+                        new HistorialRepartidor.Ubicacion(-70.6483, -33.4308, parseDateTime("2025-06-29T08:15:00")),
+                        // 5) Punto intermedio 4 (80%)
+                        new HistorialRepartidor.Ubicacion(-70.6494, -33.4340, parseDateTime("2025-06-29T08:20:00")),
+                        // 6) Punto intermedio 5 (90%)
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.4359, parseDateTime("2025-06-29T08:25:00")),
+                        // 7) Destino
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-29T08:30:00"))
                 )),
                 new HistorialRepartidor(null, 3, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6500, -33.5000, parseDateTime("2025-06-25T11:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-25T11:15:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-25T11:30:00"))
+                        new HistorialRepartidor.Ubicacion(-70.6420, -33.4206, parseDateTime("2025-06-29T08:00:00")),
+                        // 2) Punto intermedio 1 (20%)
+                        new HistorialRepartidor.Ubicacion(-70.6441, -33.4240, parseDateTime("2025-06-29T08:05:00")),
+                        // 3) Punto intermedio 2 (40%)
+                        new HistorialRepartidor.Ubicacion(-70.6462, -33.4274, parseDateTime("2025-06-29T08:10:00")),
+                        // 4) Punto intermedio 3 (60%)
+                        new HistorialRepartidor.Ubicacion(-70.6483, -33.4308, parseDateTime("2025-06-29T08:15:00")),
+                        // 5) Punto intermedio 4 (80%)
+                        new HistorialRepartidor.Ubicacion(-70.6494, -33.4340, parseDateTime("2025-06-29T08:20:00")),
+                        // 6) Punto intermedio 5 (90%)
+                        new HistorialRepartidor.Ubicacion(-70.6500, -33.4359, parseDateTime("2025-06-29T08:25:00")),
+                        // 7) Destino
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-06-29T08:30:00"))
                 )),
 
-                // Ruta única distinta D → E → F (Repartidor 4)
+                // Repartidor 4: ruta con 5 puntos y 40 minutos de recorrido
                 new HistorialRepartidor(null, 4, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.6100, -33.4700, parseDateTime("2025-06-26T08:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6200, -33.4800, parseDateTime("2025-06-26T08:15:00")),
-                        new HistorialRepartidor.Ubicacion(-70.6300, -33.4900, parseDateTime("2025-06-26T08:30:00"))
+                        new HistorialRepartidor.Ubicacion(-70.7200, -33.4500, parseDateTime("2025-07-05T08:00:00")), // origen
+                        new HistorialRepartidor.Ubicacion(-70.7138, -33.4467, parseDateTime("2025-07-05T08:10:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7076, -33.4434, parseDateTime("2025-07-05T08:20:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7014, -33.4401, parseDateTime("2025-07-05T08:30:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6952, -33.4368, parseDateTime("2025-07-05T08:40:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-07-05T08:50:00"))  // destino
                 )),
 
-                // Ruta única distinta G → H → I (Repartidor 5)
+                // Repartidor 5: misma ruta + 5 puntos, otro día
                 new HistorialRepartidor(null, 5, List.of(
-                        new HistorialRepartidor.Ubicacion(-70.7000, -33.5500, parseDateTime("2025-06-28T09:00:00")),
-                        new HistorialRepartidor.Ubicacion(-70.7100, -33.5600, parseDateTime("2025-06-28T09:15:00")),
-                        new HistorialRepartidor.Ubicacion(-70.7200, -33.5700, parseDateTime("2025-06-28T09:30:00"))
+                        new HistorialRepartidor.Ubicacion(-70.7200, -33.4500, parseDateTime("2025-07-06T09:00:00")), // origen
+                        new HistorialRepartidor.Ubicacion(-70.7138, -33.4467, parseDateTime("2025-07-06T09:10:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7076, -33.4434, parseDateTime("2025-07-06T09:20:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7014, -33.4401, parseDateTime("2025-07-06T09:30:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6952, -33.4368, parseDateTime("2025-07-06T09:40:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-07-06T09:50:00"))  // destino
+                )),
+
+                // Repartidor 6: misma ruta + 5 puntos, otro día
+                new HistorialRepartidor(null, 6, List.of(
+                        new HistorialRepartidor.Ubicacion(-70.7200, -33.4500, parseDateTime("2025-07-07T10:00:00")), // origen
+                        new HistorialRepartidor.Ubicacion(-70.7138, -33.4467, parseDateTime("2025-07-07T10:10:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7076, -33.4434, parseDateTime("2025-07-07T10:20:00")),
+                        new HistorialRepartidor.Ubicacion(-70.7014, -33.4401, parseDateTime("2025-07-07T10:30:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6952, -33.4368, parseDateTime("2025-07-07T10:40:00")),
+                        new HistorialRepartidor.Ubicacion(-70.6506, -33.4372, parseDateTime("2025-07-07T10:50:00"))  // destino
                 ))
+
         );
 
         historialRepartidorRepo.saveAll(historial);

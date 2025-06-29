@@ -102,6 +102,14 @@ const getClienteMayorGasto = (token) => {
   });
 };
 
+// Obtener un cliente por ID
+const getClienteNavegacion = (token) => {
+  return httpClient.get(`/mongo/navegacion-usuarios/clientes-sin-compra`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 export default {
   registerCliente,
@@ -116,5 +124,6 @@ export default {
   getClientesLejanos,
   getClienteMayorGasto,
   getClientesFueraDeCobertura,
+  getClienteNavegacion,
 };
 

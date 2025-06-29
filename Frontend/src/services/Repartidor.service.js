@@ -72,6 +72,14 @@ const getDistanciaTotalRecorrida = (idRepartidor, ultimosMeses, token) => {
   });
 };
 
+// Obtener un repartidor por ID
+const getRutasFrecuentes = (token) => {
+  return httpClient.get(`/mongo/historial-repartidores/rutas-frecuentes`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 export default {
   createRepartidor,
@@ -82,4 +90,5 @@ export default {
   getTiempoPromedioEntrega,
   getMejoresRepartidores,
   getDistanciaTotalRecorrida,
+  getRutasFrecuentes,
 };

@@ -1,159 +1,6 @@
 <template>
   <div class="consultas-container">
     <h2>Consultas</h2>
-    
-    <!-- CLIENTES -->
-    <!-- Clientes lejanos -->
-    <section class="consulta-section">
-      <h3>Clientes lejanos de todas las empresas</h3>
-      <button @click="fetchClientesLejanos" class="btn-consultar">Consultar</button>
-      <table v-if="clientesLejanos.length">
-        <thead>
-          <tr>
-            <th>ID Cliente</th>
-            <th>Nombre</th>
-            <th>Ubicación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(c, index) in clientesLejanos" :key="index">
-            <td>{{ c.idCliente }}</td>
-            <td>{{ c.nombreCliente }}</td>
-            <td>{{ c.ubicacion }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <l-map
-        style="height: 400px; width: 100%; max-width: 800px; margin: 20px auto; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" 
-        :zoom="12" 
-        :center="[-33.45, -70.65]"
-        v-if="clientesLejanos.length"
-      >
-        <l-tile-layer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        ></l-tile-layer>
-        <l-marker
-          v-for="(c, index) in clientesLejanos"
-          :key="index"
-          :lat-lng="parseUbicacion(c.ubicacion)"
-        >
-          <l-popup>{{ c.nombreCliente }}</l-popup>
-        </l-marker>
-      </l-map>
-    </section>
-
-    <!-- Verificar zona de cobertura -->
-    <section class="consulta-section">
-      <h3>Verificar zona de cobertura por ID</h3>
-      <div class="input-group">
-        <input v-model="clienteId" placeholder="ID Cliente" class="input-consulta" />
-        <button @click="verificarZona" class="btn-consultar">Verificar</button>
-      </div>
-      <div v-if="zonaCobertura" class="resultado">{{ zonaCobertura }}</div>
-    </section>
-
-    <!-- PEDIDOS -->
-    <!-- Pedidos más cercanos a una empresa -->
-    <section class="consulta-section">
-      <h3>Pedidos más cercanos a una empresa</h3>
-      <div class="input-group">
-        <input v-model="empresaIdCercanos" placeholder="ID Empresa" class="input-consulta" />
-        <button @click="consultarPedidosCercanos" class="btn-consultar">Consultar</button>
-      </div>
-      <table v-if="pedidosCercanos.length">
-        <thead>
-          <tr>
-            <th>ID Pedido</th>
-            <th>Distancia</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(p, i) in pedidosCercanos" :key="i">
-            <td>{{ p.idPedido }}</td>
-            <td>{{ p.distanciaMetros !== undefined && p.distanciaMetros !== null ? p.distanciaMetros.toFixed(2) + ' m' : 'N/A' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Pedidos más lejanos desde cada empresa -->
-    <section class="consulta-section">
-      <h3>Pedidos más lejanos por empresa</h3>
-      <button @click="consultarPedidosLejanos" class="btn-consultar">Consultar</button>
-      <table v-if="pedidosLejanos.length">
-        <thead>
-          <tr>
-            <th>Empresa</th>
-            <th>ID Pedido</th>
-            <th>Distancia</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(p, i) in pedidosLejanos" :key="i">
-            <td>{{ p.nombreEmpresa }} (ID: {{ p.idEmpresa }})</td>
-            <td>{{ p.idPedido }}</td>
-            <td>{{ p.distanciaMetros.toFixed(2) }} m</td>
-          </tr>
-        </tbody>
-      </table>
-      <l-map
-        style="height: 400px; width: 100%; max-width: 800px; margin: 20px auto; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" 
-        :zoom="10" 
-        :center="[-33.45, -70.65]"
-        v-if="pedidosLejanos.length"
-      >
-        <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <l-marker
-          v-for="(p, index) in pedidosLejanos"
-          :key="'empresa-' + index"
-          :lat-lng="parseUbicacion(p.ubicacionEmpresa)"
-          :icon="iconEmpresa"
-        >
-          <l-popup>
-            <strong>{{ p.nombreEmpresa }}</strong><br />
-            Empresa ID: {{ p.idEmpresa }}
-          </l-popup>
-        </l-marker>
-        <l-marker
-          v-for="(p, index) in pedidosLejanos"
-          :key="'pedido-' + index"
-          :lat-lng="parseUbicacion(p.puntoEntrega)"
-          :icon="iconPedido"
-        >
-          <l-popup>
-            <strong>Pedido ID:</strong> {{ p.idPedido }}<br />
-            Distancia: {{ p.distanciaMetros.toFixed(2) }} m
-          </l-popup>
-        </l-marker>
-      </l-map>
-    </section>
-
-    <!-- Pedidos que cruzan más de 2 zonas -->
-    <section class="consulta-section">
-      <h3>Pedidos que cruzan más de 2 zonas de reparto</h3>
-      <button @click="consultarPedidosCruzanZonas" class="btn-consultar">Consultar</button>
-      <table v-if="pedidosCruzanZonas.length">
-        <thead>
-          <tr>
-            <th>ID Pedido</th>
-            <th>Cliente</th>
-            <th>Empresa</th>
-            <th>Distancia</th>
-            <th>Zonas cruzadas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(p, i) in pedidosCruzanZonas" :key="i">
-            <td>{{ p.idPedido }}</td>
-            <td>ID: {{ p.idCliente }}</td>
-            <td>{{ p.nombreEmpresa }} (ID: {{ p.idEmpresa }})</td>
-            <td>{{ p.distanciaMetros.toFixed(2) }} m</td>
-            <td>{{ p.cantidadZonas }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
 
 
     <section class="consulta-section">
@@ -210,23 +57,85 @@
 </section>
 
 
+<section class="consulta-section">
+  <h3>Ruta(s) más frecuente(s)</h3>
+  <button @click="consultarRutasFrecuentes" class="btn-consultar">
+    Ver Ruta Frecuente
+  </button>
+
+  <l-map
+    v-if="rutasParaMostrar.length"
+    :zoom="13"
+    :center="centroMapa"
+    style="height: 400px; margin: 20px auto; max-width:800px;"
+  >
+    <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+
+    <template v-for="(poly, idx) in rutasParaMostrar" :key="idx">
+      <!-- Punto de PARTIDA con iconEmpresa -->
+      <l-marker
+        :lat-lng="poly[0]"
+        :icon="iconEmpresa"
+      >
+        <l-popup>Ruta {{ idx+1 }} - Partida</l-popup>
+      </l-marker>
+
+      <!-- Punto de LLEGADA con iconPedido -->
+      <l-marker
+        :lat-lng="poly[poly.length-1]"
+        :icon="iconPedido"
+      >
+        <l-popup>Ruta {{ idx+1 }} - Llegada</l-popup>
+      </l-marker>
+
+      <!-- Polilínea coloreada -->
+      <l-polyline
+        :lat-lngs="poly"
+        :color="rutaColors[idx % rutaColors.length]"
+        weight="5"
+      />
+    </template>
+  </l-map>
+</section>
 
 
+<section class="consulta-section">
+  <h3>Clientes sin compra tras navegación</h3>
+  <button @click="consultarClientesSinCompra" class="btn-consultar">
+    Ver Clientes
+  </button>
 
+  <!-- Si hay resultados, mostramos tabla de nombres -->
+  <table v-if="clientesSinCompra.length">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre Cliente</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(nombre, idx) in clientesSinCompra" :key="idx">
+        <td>{{ idx + 1 }}</td>
+        <td>{{ nombre }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-
-    <!-- REPARTIDORES -->
-    <section class="consulta-section">
-  <h3>Distancia total recorrida por un repartidor</h3>
-  <div class="input-group">
-    <input v-model="idRepartidorConsulta" placeholder="ID Repartidor" class="input-consulta" />
-    <input v-model.number="ultimosMesesConsulta" type="number" min="1" class="input-consulta" placeholder="Meses" />
-    <button @click="consultarDistanciaTotal" class="btn-consultar">Consultar</button>
-  </div>
-  <div v-if="distanciaTotal !== null" class="resultado" style="color: #000000;">
-    Distancia total recorrida: {{ distanciaTotal.toFixed(2) }} km
+  <!-- Si no hay resultados, mensaje -->
+  <div v-else class="resultado">
+    No se encontraron clientes sin compra tras navegar.
   </div>
 </section>
+
+
+
+
+
+
+
+
+
+
   </div>
 </template>
 
@@ -237,7 +146,7 @@ import RepartidorService from "@/services/Repartidor.service";
 import OpinionesService from "@/services/Opiniones.service";
 import EmpresasService from "@/services/EmpresasAsociadas.service"
 
-import { LMap, LTileLayer, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup, LPolyline } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -255,6 +164,7 @@ export default {
     LTileLayer,
     LMarker,
     LPopup,
+    LPolyline,
   },
   data() {
     const iconEmpresa = L.icon({
@@ -294,6 +204,12 @@ export default {
       promediosPuntuacion: [],
       opinionesConNombre: [],
       pedidosConMuchosCambios: null,
+      rutasParaMostrar: [],
+      centroMapa: [-33.45, -70.65],
+      clientesSinCompra: [],
+      rutaColors: ['blue', 'red', 'green', 'orange', 'purple', 'teal', 'magenta'],
+      
+
     };
   },
   methods: {
@@ -361,62 +277,80 @@ export default {
 
 
     async consultarPedidosConMuchosCambios() {
-  try {
-    const token = localStorage.getItem("jwt");
-    const res = await PedidoService.getPedidosConCambios3_10min(token);
-    this.pedidosConMuchosCambios = res.data;
-  } catch (error) {
-    console.error("Error al obtener pedidos con muchos cambios:", error);
-    alert("Error al obtener pedidos con muchos cambios");
-  }
-},
-
-
-
-
-
-
-
-
-
-
-    async fetchClientesLejanos() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      const res = await ClienteService.getClientesLejanos(token);
-      this.clientesLejanos = res.data;
+        try {
+            const token = localStorage.getItem("jwt");
+            const res = await PedidoService.getPedidosConCambios3_10min(token);
+            this.pedidosConMuchosCambios = res.data;
+        } catch (error) {
+            console.error("Error al obtener pedidos con muchos cambios:", error);
+            alert("Error al obtener pedidos con muchos cambios");
+        }
     },
-    async verificarZona() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      if (!this.clienteId) return;
-      const res = await ClienteService.verificarZonaCobertura(this.clienteId, token);
-      this.zonaCobertura = res.data;
+
+
+    async consultarRutasFrecuentes() {
+        try {
+            const token = localStorage.getItem("jwt");
+            const res = await RepartidorService.getRutasFrecuentes(token);
+            const rutas = res.data;
+
+            if (!rutas.length) {
+            this.rutasParaMostrar = [];
+            return;
+            }
+
+            const maxFreq = Math.max(...rutas.map(r => r.frecuencia));
+            const rutasMax = rutas.filter(r => r.frecuencia === maxFreq);
+
+            this.rutasParaMostrar = rutasMax.map(rutaObj =>
+            rutaObj._id.map(pt => [pt.lng, pt.lat])
+            );
+
+            const firstPt = this.rutasParaMostrar[0][0];
+            this.centroMapa = [ firstPt[0], firstPt[1] ];
+        } catch (err) {
+            console.error(err);
+            this.rutasParaMostrar = [];
+        }
     },
-    async consultarPedidosCercanos() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      if (!this.empresaIdCercanos) return;
-      const res = await PedidoService.getPedidosMasCercanosEmpresa(this.empresaIdCercanos, token);
-      this.pedidosCercanos = res.data;
-    },
-    async consultarPedidosLejanos() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      const res = await PedidoService.getPedidosMasLejanosPorEmpresa(token);
-      this.pedidosLejanos = res.data;
-    },
-    async consultarPedidosCruzanZonas() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      const res = await PedidoService.getPedidosConMasDeDosZonas(token);
-      this.pedidosCruzanZonas = res.data;
-    },
-    async consultarDistanciaTotal() {
-      const token = localStorage.getItem("jwt"); // Obtener el token de localStorage
-      if (!this.idRepartidorConsulta) return;
-      const res = await RepartidorService.getDistanciaTotalRecorrida(
-        this.idRepartidorConsulta,
-        this.ultimosMesesConsulta,
-        token
+
+
+
+    async consultarClientesSinCompra() {
+    try {
+      const token = localStorage.getItem("jwt");
+      // 1) obtiene array de IDs [3,1,2,...]
+      const resIds = await ClienteService.getClienteNavegacion(token);
+      const ids = resIds.data;
+
+      // 2) por cada ID pide los datos y extrae el nombre
+      const clientes = await Promise.all(
+        ids.map(id =>
+          ClienteService.getClienteById(id, token)
+            .then(res => res.data.nombre_cliente)
+        )
       );
-      this.distanciaTotal = res.data;
-    },
+
+      // 3) asigna el array de nombres para pintar
+      this.clientesSinCompra = clientes;
+    } catch (err) {
+      console.error("Error al cargar clientes sin compra:", err);
+      this.clientesSinCompra = [];
+    }
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+    
     parseUbicacion(ubicacion) {
       const match = ubicacion.match(/POINT\((-?\d+\.\d+) (-?\d+\.\d+)\)/);
       if (match) {
