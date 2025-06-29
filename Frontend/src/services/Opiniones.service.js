@@ -17,7 +17,16 @@ const getOpinionesError = (token) => {
   });
 };
 
+const getOpinionesPorHora = (token) => {
+  return httpClient.get('/mongo/opiniones/agrupadas-por-hora', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export default {
   getPromedioPuntuacion,
   getOpinionesError,
+  getOpinionesPorHora,
 };

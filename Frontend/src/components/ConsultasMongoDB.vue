@@ -130,6 +130,46 @@
 
 
 
+<section class="consulta-section">
+  <h3>Opiniones agrupadas por hora</h3>
+  <button @click="consultarOpinionesPorHora" class="btn-consultar">
+    Ver Opiniones por Hora
+  </button>
+
+  <div v-if="opinionesPorHora.length">
+    <div 
+      v-for="grupo in opinionesPorHora" 
+      :key="grupo.horaDelDia"
+      style="margin-top: 20px;"
+    >
+      <h4>Hora del día: {{ grupo.horaDelDia }}:00</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Comentario</th>
+            <th>Puntuación</th>
+            <th>Fecha</th>
+            <th>Cliente ID</th>
+            <th>Empresa ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(op, idx) in grupo.opiniones" :key="idx">
+            <td>{{ op.comentario }}</td>
+            <td>{{ op.puntuacion }}</td>
+            <td>{{ new Date(op.fecha).toLocaleString() }}</td>
+            <td>{{ op.clienteId }}</td>
+            <td>{{ op.empresaId }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div v-else class="resultado">
+    No se encontraron opiniones agrupadas por hora.
+  </div>
+</section>
 
 
 
@@ -208,6 +248,7 @@ export default {
       centroMapa: [-33.45, -70.65],
       clientesSinCompra: [],
       rutaColors: ['blue', 'red', 'green', 'orange', 'purple', 'teal', 'magenta'],
+      opinionesPorHora: [],
       
 
     };
@@ -339,9 +380,17 @@ export default {
     }
   },
 
-
-
-
+  async consultarOpinionesPorHora() {
+    try {
+      const token = localStorage.getItem("jwt");
+      const res = await OpinionesService.getOpinionesPorHora(token);
+      this.opinionesPorHora = res.data; 
+      // [{ horaDelDia: 3, opiniones: [ ... ] }, { horaDelDia: 4, opiniones: [ ... ] }, …]
+    } catch (err) {
+      console.error("Error al cargar opiniones por hora:", err);
+      this.opinionesPorHora = [];
+    }
+  },
 
 
 

@@ -2,6 +2,7 @@ package com.example.demo.Service.mongo;
 
 import com.example.demo.Entity.mongo.OpinionCliente;
 import com.example.demo.Repository.mongo.OpinionClienteRepository;
+import com.mongodb.BasicDBObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -67,17 +68,38 @@ public class OpinionClienteService {
 
     public List<Document> agruparOpinionesPorHora() {
         Aggregation agg = Aggregation.newAggregation(
-                Aggregation.project("fecha", "puntuacion")
+                // 1) Extraigo la hora del día de cada fecha
+                Aggregation.project("comentario", "puntuacion", "fecha", "clienteId", "empresaId")
                         .andExpression("hour(fecha)").as("horaDelDia"),
+
+                // 2) Agrupo por esa hora y acumulo todas las opiniones en un array
                 Aggregation.group("horaDelDia")
-                        .count().as("totalOpiniones")
-                        .avg("puntuacion").as("promedioPuntuacion"),
-                Aggregation.sort(Sort.by(Sort.Direction.ASC, "_id")) // ordena por hora
+                        .push(
+                                new BasicDBObject("comentario", "$comentario")
+                                        .append("puntuacion", "$puntuacion")
+                                        .append("fecha", "$fecha")
+                                        .append("clienteId", "$clienteId")
+                                        .append("empresaId", "$empresaId")
+                        ).as("opinionesPorHora"),
+
+                // 3) Proyecto para que el resultado tenga { horaDelDia, opinionesPorHora }
+                Aggregation.project()
+                        .and("_id").as("horaDelDia")
+                        .and("opinionesPorHora").as("opiniones")
+                        .andExclude("_id"),
+
+                // 4) Ordeno por hora ascendente
+                Aggregation.sort(Sort.by(Sort.Direction.ASC, "horaDelDia"))
         );
 
-        AggregationResults<Document> results = mongoTemplate.aggregate(agg, "opiniones_clientes", Document.class);
+        AggregationResults<Document> results = mongoTemplate.aggregate(
+                agg,
+                "opiniones_clientes",
+                Document.class
+        );
         return results.getMappedResults();
     }
+
 
 }
 
