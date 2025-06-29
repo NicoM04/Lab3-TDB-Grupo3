@@ -149,7 +149,6 @@
             <th>Comentario</th>
             <th>Puntuación</th>
             <th>Fecha</th>
-            <th>Cliente ID</th>
             <th>Empresa ID</th>
           </tr>
         </thead>
@@ -158,8 +157,7 @@
             <td>{{ op.comentario }}</td>
             <td>{{ op.puntuacion }}</td>
             <td>{{ new Date(op.fecha).toLocaleString() }}</td>
-            <td>{{ op.clienteId }}</td>
-            <td>{{ op.empresaId }}</td>
+            <td>{{ op.nombre_empresa }}</td>
           </tr>
         </tbody>
       </table>
@@ -381,16 +379,37 @@ export default {
   },
 
   async consultarOpinionesPorHora() {
-    try {
-      const token = localStorage.getItem("jwt");
-      const res = await OpinionesService.getOpinionesPorHora(token);
-      this.opinionesPorHora = res.data; 
-      // [{ horaDelDia: 3, opiniones: [ ... ] }, { horaDelDia: 4, opiniones: [ ... ] }, …]
-    } catch (err) {
-      console.error("Error al cargar opiniones por hora:", err);
-      this.opinionesPorHora = [];
+  try {
+    const token = localStorage.getItem("jwt");
+    const res = await OpinionesService.getOpinionesPorHora(token);
+    const grupos = res.data;
+
+    // Cache para no repetir llamadas innecesarias
+    const cacheEmpresas = {};
+
+    for (const grupo of grupos) {
+      for (const opinion of grupo.opiniones) {
+        // Eliminar clienteId si está presente
+        delete opinion.clienteId;
+
+        const id = opinion.empresaId;
+        if (!cacheEmpresas[id]) {
+          const empresaRes = await EmpresasService.getEmpresaById(id, token);
+          cacheEmpresas[id] = empresaRes.data.nombre_empresa;
+        }
+
+        // Reemplazar empresaId con el nombre
+        opinion.nombre_empresa = cacheEmpresas[id];
+        delete opinion.empresaId;
+      }
     }
-  },
+
+    this.opinionesPorHora = grupos;
+  } catch (err) {
+    console.error("Error al cargar opiniones por hora:", err);
+    this.opinionesPorHora = [];
+  }
+},
 
 
 
