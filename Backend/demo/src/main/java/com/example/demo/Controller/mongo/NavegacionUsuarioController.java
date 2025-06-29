@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mongo/navegacion-usuarios")
+@CrossOrigin(origins = "*")  // permite llamadas desde tu frontend
 public class NavegacionUsuarioController {
 
     @Autowired

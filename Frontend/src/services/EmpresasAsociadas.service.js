@@ -45,10 +45,19 @@ const getEmpresasConMasFallos = (token) => {
   });
 };
 
+const getEmpresaById = (id, token) => {
+  return httpClient.get(`/empresas/getById/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export default {
   createEmpresa,
   getEmpresas,
   updateEmpresa,
   deleteEmpresa,
   getEmpresasConMasFallos,
+  getEmpresaById,
 };

@@ -12,6 +12,7 @@ import Carrito from '@/components/Carrito.vue';
 import ConsultasCliente from "@/components/ConsultasCliente.vue";
 import Empresas from "@/components/Empresas.vue";
 import SeleccionProductos from "@/components/SeleccionProductos.vue";
+import ConsultasMongoDB from '@/components/ConsultasMongoDB.vue';
 
 //Definir las rutas de la aplicacion
 const routes = [
@@ -84,6 +85,10 @@ const routes = [
   {
     path: "/consultas-cliente",
     component: ConsultasCliente,
+  },
+  {
+    path: "/consultasMongoDB",
+    component: ConsultasMongoDB,
   },
     {
     path: '/empresas',

@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mongo/logs-pedidos")
+@CrossOrigin(origins = "*")  // permite llamadas desde tu frontend
 public class LogPedidoController {
 
     @Autowired

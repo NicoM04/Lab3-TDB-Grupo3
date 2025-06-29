@@ -108,6 +108,14 @@ const getPedidosConMasDeDosZonas = (token) => {
   });
 };
 
+const getPedidosConCambios3_10min = (token) => {
+  return httpClient.get("/mongo/logs-pedidos/cambios-mayor-3-en-10min", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 
 export default {
   createPedido,
@@ -121,5 +129,6 @@ export default {
   obtenerPedidosCliente,
   getPedidosMasCercanosEmpresa,
   getPedidosMasLejanosPorEmpresa,
-  getPedidosConMasDeDosZonas
+  getPedidosConMasDeDosZonas,
+  getPedidosConCambios3_10min,
 };

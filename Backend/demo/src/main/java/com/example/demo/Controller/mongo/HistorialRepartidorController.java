@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mongo/historial-repartidores")
+@CrossOrigin(origins = "*")  // permite llamadas desde tu frontend
 public class HistorialRepartidorController {
 
     @Autowired
