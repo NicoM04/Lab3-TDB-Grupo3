@@ -1,5 +1,5 @@
-# Laboratorio 2 - TDB - Grupo 3
-Este repositorio contiene todos los archivos relacionados con el Laboratorio N°2 del Laboratorio de Base de Datos Avanzadas desarrollado por el grupo 3.
+# Laboratorio 3 - TDB - Grupo 3
+Este repositorio contiene todos los archivos relacionados con el Laboratorio N°3 del Laboratorio de Base de Datos Avanzadas desarrollado por el grupo 3.
 
 **IMPORTANTE:**
 - Para poder conectarse correctamente con la base de datos y el backend, asegurate de lo siguientes:
