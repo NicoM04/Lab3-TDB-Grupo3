@@ -75,7 +75,7 @@ public class OpinionClienteService {
                 Aggregation.sort(Sort.by(Sort.Direction.ASC, "_id")) // ordena por hora
         );
 
-        AggregationResults<Document> results = mongoTemplate.aggregate(agg, "opinion_cliente", Document.class);
+        AggregationResults<Document> results = mongoTemplate.aggregate(agg, "opiniones_clientes", Document.class);
         return results.getMappedResults();
     }
 
