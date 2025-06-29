@@ -27,7 +27,7 @@ Para ejecutar correctamente todo el proyecto, además de los archivos del reposi
 ## Instrucciones de uso
 1. Clona el repositorio en tu máquina local usando el siguiente comando:
 ```sh
-git clone https://github.com/NicoM04/Lab2-TDB-Grupo3.git
+git clone https://github.com/NicoM04/Lab3-TDB-Grupo3.git
 ```
 
 2. Configurar la base de datos
